@@ -26,6 +26,11 @@ urlpatterns = [
     #list of all currencies
     path('', views.show_list, name="list"),
 
+    #user-authantication
+    path( 'api-auth/' , include( 'rest_framework.urls' )),
+    path( 'login/' , include( 'dj_rest_auth.urls' ), name="signin"),
+    path( 'registration/' , include( 'dj_rest_auth.registration.urls' ), name="signup"),
+
     # historical exchange rates page
     path('historical/', views.show_historical, name="historical"),
 
@@ -34,4 +39,6 @@ urlpatterns = [
 
     #converting currencies
     path('index/', views.index, name="index"),
+
+    # path( '<int:pk>/' , DetailTodo . as_view()),
 ]

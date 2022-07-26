@@ -1,4 +1,4 @@
-from re import template
+from rest_framework import generics, permissions
 from django.shortcuts import render
 from decouple import config
 import requests
