@@ -14,8 +14,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from converter import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+    # admin panel url
     path('admin/', admin.site.urls),
+
+    #list of all currencies
+    path('', views.show_list, name="list"),
+
+    # historical exchange rates page
+    path('historical/', views.show_historical, name="historical"),
+
+    # live rates page
+    path('live/', views.show_live, name="live"),
+
+    #converting currencies
+    path('index/', views.index, name="index"),
 ]

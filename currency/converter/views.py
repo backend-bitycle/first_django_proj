@@ -1,3 +1,4 @@
+from re import template
 from django.shortcuts import render
 from decouple import config
 import requests
@@ -6,13 +7,30 @@ import requests
 key = config('API_KEY')
 url = config('BASE_URL')
 
+def show_list(request):
+    template = 'list.html'
+    url1 = url+"list"
+    payload = {}
+    headers= {
+    "apikey": key
+    }
+    response = requests.request("GET", url1, headers=headers, data = payload)
+    data = response.json()
+    symbols = data['currencies']
+    context = {'symbols': symbols}
+
+    # Pass data to the template
+    return render(request, template, context)
+
 def show_live(request):
-    # define the temlate name
     template = 'live.html'
 
-    # pass api response to a variable
-    response = requests.get(f"{url}/live?access_key={key}")
-
+    url1 = url+"live?"
+    payload = {}
+    headers= {
+    "apikey": key
+    }
+    response = requests.request("GET", url1, headers=headers, data = payload)
     # response data converted to json
     data = response.json()
     quotes = data['quotes']
@@ -34,9 +52,12 @@ def index(request):
 
         # amount to exchnage
         amount= request.POST.get('amount', False)
-
-        response = requests.get(f"{url}/convert?access_key={key}&from={currency1}&to={currency2}&amount={amount}")
-
+        url1 = url + f"convert?to={currency2}&from={currency1}&amount={amount}"
+        payload = {}
+        headers= {
+        "apikey": key
+        }
+        response = requests.request("GET", url1, headers=headers, data = payload)
         # response data convterted to json
         data = response.json()
         rate = data['info']['quote']
@@ -55,10 +76,12 @@ def show_historical(request):
     if request.method == 'POST':
         # extract date from the post request
         date = request.POST.get('date', False)   
-
-        # pass api response to a variable
-        response = requests.get(f"{url}/historical?access_key={key}&date={date}")
-
+        url1 = url + f"historical?date={date}"
+        payload = {}
+        headers= {
+        "apikey": key
+        }
+        response = requests.request("GET", url1, headers=headers, data = payload)
         # convert the response data to json
         data = response.json()
         quotes = data['quotes']
